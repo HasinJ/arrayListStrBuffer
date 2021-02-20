@@ -26,14 +26,14 @@ void al_destroy(arraylist_t *L)
 int al_append(arraylist_t *L, int item)
 {
     if (L->used == L->length) {
-	size_t size = L->length * 2;
-	int *p = realloc(L->data, sizeof(int) * size);
-	if (!p) return 1;
+    	size_t size = L->length * 2;
+    	int *p = realloc(L->data, sizeof(int) * size);
+    	if (!p) return 1;
 
-	L->data = p;
-	L->length = size;
+    	L->data = p;
+    	L->length = size;
 
-	if (DEBUG) printf("Increased size to %lu\n", size);
+    	if (DEBUG) printf("Increased size to %lu\n", size);
     }
 
     L->data[L->used] = item;
