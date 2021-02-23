@@ -25,24 +25,29 @@ int main(int argc, char **argv){
 
 
     char choice[2];
-    int i, item;
+    int i, item, index;
     arraylist_t A;
     al_init(&A, 2);
 
     while(fscanf(f,"%s %d",choice, &item)!=EOF){
     	//al_append(&A, d);
       if(choice[0]=='a') al_append(&A, item);
-      if(choice[0]=='i') printf("%d\n", item);
+      if(choice[0]=='i') {
+        fscanf(f,"%d",&index);
+        al_insert(&A, index, item);
+      }
       //printf("choice: %s, item: %d\n", choice, item);
     }
 
-    qsort(A.data, A.used, sizeof(int), cmp);
-
+    //qsort(A.data, A.used, sizeof(int), cmp);
 
     for (i = 0; i < A.used; ++i) {
     	printf("%d\n", A.data[i]);
     }
 
+    printf("A.used %ld\n", A.used);
+    printf("A.length %ld\n", A.length);
+    printf("A.data[0] %d\n", A.data[0]);
     al_destroy(&A);
 
     return EXIT_SUCCESS;
