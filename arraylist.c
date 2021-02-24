@@ -54,10 +54,8 @@ int al_remove(arraylist_t *L, int *item){
 //empty beginning, middle, and end
 
 int al_insert(arraylist_t *L, int index, int item){
-  if (L->used<L->length && index>=L->used) {
-    if (DEBUG) printf("normal: index %d item %d\n", index, item);
-    L->data[index]=item;
-    ++L->used;
+  if (index>L->used) {
+    al_append(L,item);
     return 1;
   }
 
