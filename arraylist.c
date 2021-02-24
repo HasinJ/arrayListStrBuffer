@@ -47,25 +47,44 @@ int al_remove(arraylist_t *L, int *item){
     return 1;
 }
 
+//if it's full and add to the end
+//if it's full and add to the beginning
+//if it's full and add to the middle
+//regular beginning, middle, and end
+//empty beginning, middle, and end
+
 int al_insert(arraylist_t *L, int index, int item){
-  if (index+1>L->length){
-    size_t new_length;
-    if(L->length*2<index) new_length=index+1;
-    else new_length=L->length*2;
-
-    if (DEBUG) printf("new_length %ld\n", new_length);
-
-    int* data = realloc(L->data, sizeof(int) * new_length);
-    L->data=data;
-    L->used=new_length-1;
-    L->length=new_length;
-
-    L->data[index]=item;
-    //if (DEBUG) printf("L->data[0] %d\n", L->data[0]);
-  }
-  else{
+  if (L->used<L->length && index>=L->used) {
+    if (DEBUG) printf("normal: index %d item %d\n", index, item);
     L->data[index]=item;
     ++L->used;
+    return 1;
   }
+
+  size_t new_length,i;
+  if(L->used!=L->length && index<L->length) new_length=L->length;
+  else if(L->length*2<index) new_length=index+1;
+  else new_length=L->length*2;
+
+  if (DEBUG) printf("new_length %ld\n", new_length);
+
+  int* data = malloc(sizeof(int) * new_length);
+  for (i = 0; i < L->used; i++) {
+    if(i>=index) data[i+1]=L->data[i];
+    else data[i]=L->data[i];
+  }
+
+  if (DEBUG){
+    printf("\nnew data: \n");
+    for (i = 0; i < new_length-1; ++i) printf("%d\n", data[i]);
+    printf("\n");}
+
+  data[index]=item;
+  free(L->data);
+  L->data=data;
+  L->length=new_length;
+  L->used++;
+  //if (DEBUG) printf("L->data[0] %d\n", L->data[0]);
+
   return 1;
 }
