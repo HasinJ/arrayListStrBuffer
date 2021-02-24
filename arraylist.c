@@ -54,19 +54,35 @@ int al_remove(arraylist_t *L, int *item){
 //empty beginning, middle, and end
 
 int al_insert(arraylist_t *L, int index, int item){
-  if (index>L->used) {
-    al_append(L,item);
-    return 1;
-  }
-
   size_t new_length,i;
-  if(L->used!=L->length && index<L->length) new_length=L->length;
-  else if(L->length*2<index) new_length=index+1;
+  if(L->length*2<index) new_length=index+1;
   else new_length=L->length*2;
 
+  if (index>L->length) {
+    int* data = realloc(L->data, sizeof(int) * new_length);
+    L->data=data;
+    L->used=new_length;
+    L->length=new_length;
+    L->data[index]=item;
+    return 0;
+  }
+
+  else if (L->used<L->length && index>=L->used) {
+    if (DEBUG) printf("no shift: item %d index %d \n", item, index);
+    L->data[index]=item;
+    ++L->used;
+    if(index>L->used) L->used=index+1;
+    return 0;
+  }
+
+  //shifting
+  if (DEBUG) printf("shifting: item %d index %d \n", item, index);
+  if(L->used!=L->length && index<L->length) new_length=L->length;
   if (DEBUG) printf("new_length %ld\n", new_length);
 
   int* data = malloc(sizeof(int) * new_length);
+  if (!data) return 1;
+
   for (i = 0; i < L->used; i++) {
     if(i>=index) data[i+1]=L->data[i];
     else data[i]=L->data[i];
@@ -82,7 +98,8 @@ int al_insert(arraylist_t *L, int index, int item){
   L->data=data;
   L->length=new_length;
   L->used++;
+  if(index>L->used) L->used=index;
   //if (DEBUG) printf("L->data[0] %d\n", L->data[0]);
 
-  return 1;
+  return 0;
 }
