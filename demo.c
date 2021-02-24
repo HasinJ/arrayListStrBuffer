@@ -40,14 +40,14 @@ int main(int argc, char **argv){
     }
 
     //qsort(A.data, A.used, sizeof(int), cmp);
-
+    printf("final: \n");
     for (i = 0; i < A.used; ++i) {
     	printf("%d\n", A.data[i]);
     }
 
     printf("A.used %ld\n", A.used);
     printf("A.length %ld\n", A.length);
-    printf("A.data[0] %d\n", A.data[0]);
+    //printf("A.data[0] %d\n", A.data[0]);
     al_destroy(&A);
 
     return EXIT_SUCCESS;
