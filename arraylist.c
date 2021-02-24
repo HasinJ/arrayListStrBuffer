@@ -54,11 +54,13 @@ int al_remove(arraylist_t *L, int *item){
 //empty beginning, middle, and end
 
 int al_insert(arraylist_t *L, int index, int item){
+  if (DEBUG) printf("item %d index %d \n", item, index);
   size_t new_length,i;
   if(L->length*2<index) new_length=index+1;
   else new_length=L->length*2;
 
   if (index>L->length) {
+    if (DEBUG) printf("no shift but realloc\n");
     int* data = realloc(L->data, sizeof(int) * new_length);
     L->data=data;
     L->used=new_length;
@@ -68,7 +70,7 @@ int al_insert(arraylist_t *L, int index, int item){
   }
 
   else if (L->used<L->length && index>=L->used) {
-    if (DEBUG) printf("no shift: item %d index %d \n", item, index);
+    if (DEBUG) printf("no shift\n");
     L->data[index]=item;
     ++L->used;
     if(index>L->used) L->used=index+1;
@@ -76,7 +78,7 @@ int al_insert(arraylist_t *L, int index, int item){
   }
 
   //shifting
-  if (DEBUG) printf("shifting: item %d index %d \n", item, index);
+  if (DEBUG) printf("shifting\n");
   if(L->used!=L->length && index<L->length) new_length=L->length;
   if (DEBUG) printf("new_length %ld\n", new_length);
 
@@ -89,7 +91,7 @@ int al_insert(arraylist_t *L, int index, int item){
   }
 
   if (DEBUG){
-    printf("\nnew data: \n");
+    printf("new data: \n");
     for (i = 0; i < new_length-1; ++i) printf("%d\n", data[i]);
     printf("\n");}
 
