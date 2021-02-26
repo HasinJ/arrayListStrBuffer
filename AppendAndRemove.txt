@@ -1,0 +1,13 @@
+a l
+a o
+a l
+a i
+r 0
+r 0
+a l
+a i
+a p
+a o
+a p
+r 0
+a p
