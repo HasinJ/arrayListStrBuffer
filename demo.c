@@ -33,21 +33,29 @@ int main(int argc, char **argv){
       return EXIT_SUCCESS;
     }
 
-
-
+    char choice[2];
+    char item;
     int i;
     strbuf_t S;
-    sb_init(&S, 2);
+    sb_init(&S, 3);
 
-    sb_append(&S, 'c');
+    //sb_append(&S,'c');
 
-
+    while(fscanf(f,"%s %c",choice, &item)!=EOF){
+      if(choice[0]=='a') sb_append(&S, item);
+      if(choice[0]=='r'){
+        printf("removing\n\n");
+        sb_remove(&S, &item);
+      }
+    }
     //qsort(S.data, S.used, sizeof(int), cmp);
     printf("\nfinal: \n");
 
-    for (i = 0; i < S.used+1; ++i)  {
+    for (i = 0; i < S.length+1; ++i)  {
       printf("%d ", S.data[i]);
+      printf("\n");
     }
+    printf("\n");
 
     //printf("%s ", &S.data[0]);
     printf("\nData Printed: %s\n\n", S.data);
