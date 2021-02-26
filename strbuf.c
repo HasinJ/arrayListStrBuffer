@@ -7,6 +7,22 @@
 #define DEBUG 0
 #endif
 
+void removeNullTerminator(strbuf_t *L){
+  if (DEBUG) printf("removing null term\n\n");
+  size_t i;
+  char* data = malloc(sizeof(char)*L->length);
+  for (i = 0; i < L->used; i++){
+    if(L->data[i]=='\0'){
+      printf("exiting...\n");
+      return;
+    }
+    data[i]=L->data[i];
+  }
+
+  free(L->data);
+  L->data=data;
+}
+
 int sb_init(strbuf_t *L, size_t length){
   L->data = malloc(sizeof(char) * length+1);
   if (!L->data) return 1;
@@ -25,11 +41,7 @@ int sb_append(strbuf_t *L, char item){ //adds to the end
   if (DEBUG) printf("appending\n");
 
   if (L->used == L->length) {
-    ++L->used;
-
-    char holder;
-    sb_remove(L,&holder);
-    if (DEBUG) printf("holder %d\n",holder);
+    removeNullTerminator(L);
     size_t size = L->length * 2;
     char *p = realloc(L->data, sizeof(char) * size+1);
 
@@ -37,12 +49,12 @@ int sb_append(strbuf_t *L, char item){ //adds to the end
 
     L->data = p;
     L->length = size;
-    L->data[size]='\0';
 
     if (DEBUG) printf("Increased size to %lu\n", size);
   }
 
   L->data[L->used] = item;
+  L->data[L->used+1] = '\0';
   ++L->used;
   if (DEBUG) printf("\n");
   return 0;
@@ -54,19 +66,45 @@ int sb_remove(strbuf_t *L, char *item){
   --L->used;
   if (item) *item = L->data[L->used];
 
-  //printf("L->length: %ld L->used: %ld\n", L->length, L->used);
   char* data = malloc(sizeof(char) * L->length+1);
   for (i = 0; i < L->used; i++) {
     data[i]=L->data[i];
   }
   sb_destroy(L);
 
-  if (data[L->length]!='\0') data[L->length]='\0';
   L->data=data;
-  //printf("%c\n", data[0]);
+  L->data[L->used]='\0';
   return 1;
 }
 
 int sb_insert(strbuf_t *L, int index, char item){
+  if (DEBUG) printf("item %c index %d \n", item, index);
+  size_t new_length;
+  if(L->length*2<=index) new_length=index+1;
+  else new_length=L->length*2;
+
+  if (index>=L->length) {
+    if (DEBUG) printf("no shift but realloc new_length: %ld\n", new_length);
+
+    removeNullTerminator(L);
+    char* data = realloc(L->data,sizeof(char) * new_length+1);
+
+    L->used=index+1;
+    L->data=data;
+    L->data[L->used]='\0';
+    L->length=new_length;
+    L->data[index]=item;
+    return 0;
+  }
+
+  else if (index>=L->used && index<L->length) {
+    if (DEBUG) printf("no shift\n");
+    removeNullTerminator(L);
+    L->data[index]=item;
+    ++L->used;
+    if(index>L->used) L->used=index+1;
+    return 0;
+  }
+
   return 0;
 }
