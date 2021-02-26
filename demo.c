@@ -53,11 +53,12 @@ int main(int argc, char **argv){
         sb_insert(&S, index, item);
       }
     }
+    sb_concat(&S," hello");
     //qsort(S.data, S.used, sizeof(int), cmp);
     printf("\nfinal: \n");
 
     for (i = 0; i < S.used; ++i) {
-      printf("%d ", S.data[i]);
+      printf("%d index: %ld", S.data[i],i);
       printf("\n");
     }
     printf("\n");
@@ -65,8 +66,8 @@ int main(int argc, char **argv){
 
     printf("\nhidden stuff: \n");
 
-    for (i = S.used; i<S.length; i++) {
-      printf("%d ", S.data[i]);
+    for (i = S.used; i<S.length+1; i++) {
+      printf("%d index: %ld", S.data[i],i);
       printf("\n");
     }
     printf("last used: %d\n",S.data[S.used-1]);
