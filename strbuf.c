@@ -96,7 +96,7 @@ int sb_remove(strbuf_t *L, char *item){
 
 int sb_insert(strbuf_t *L, int index, char item){
   if (DEBUG) printf("item %c index %d \n", item, index);
-  size_t new_length;
+  size_t new_length,i;
   if(L->length*2<=index) new_length=index+1;
   else new_length=L->length*2;
 
@@ -123,6 +123,25 @@ int sb_insert(strbuf_t *L, int index, char item){
     L->data[L->used]='\0';
     return 0;
   }
+
+  if (DEBUG) printf("shifting\n");
+  if(L->used!=L->length && index<L->length) new_length=L->length;
+  if (DEBUG) printf("new_length %ld\n", new_length);
+
+  char* data = malloc(sizeof(char) * new_length+1);
+  if (!data) return 1;
+
+  for (i = 0; i < L->used; i++) {
+    if(i>=index) data[i+1]=L->data[i];
+    else data[i]=L->data[i];
+  }
+  sb_destroy(L);
+  L->data=data;
+  L->data[++L->used]='\0';
+  L->data[index]=item;
+  L->length=new_length;
+
+
 
 
 
