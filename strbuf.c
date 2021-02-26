@@ -142,8 +142,13 @@ int sb_insert(strbuf_t *L, int index, char item){
   L->length=new_length;
 
 
+  return 0;
+}
 
-
-
+int sb_concat(strbuf_t *sb, char *str){
+  size_t i;
+  for (i = 0; i < strlen(str); i++) {
+    sb_insert(sb, sb->used, str[i]);
+  }
   return 0;
 }
