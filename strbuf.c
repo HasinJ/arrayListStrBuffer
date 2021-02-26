@@ -23,6 +23,23 @@ void removeNullTerminator(strbuf_t *L){
   L->data=data;
 }
 
+
+void specialRemoveNullTerminator(strbuf_t *L){
+  if (DEBUG) printf("removing null term\n\n");
+  size_t i;
+  char* data = malloc(sizeof(char)*L->length+1);
+  for (i = 0; i < L->used; i++){
+    if(L->data[i]=='\0'){
+      printf("exiting...\n");
+      return;
+    }
+    data[i]=L->data[i];
+  }
+
+  free(L->data);
+  L->data=data;
+}
+
 int sb_init(strbuf_t *L, size_t length){
   L->data = malloc(sizeof(char) * length+1);
   if (!L->data) return 1;
@@ -83,28 +100,31 @@ int sb_insert(strbuf_t *L, int index, char item){
   if(L->length*2<=index) new_length=index+1;
   else new_length=L->length*2;
 
+
   if (index>=L->length) {
-    if (DEBUG) printf("no shift but realloc new_length: %ld\n", new_length);
+    if (DEBUG) printf("no shift but realloc new_length: %ld but... %ld\n", new_length, new_length+1);
 
     removeNullTerminator(L);
     char* data = realloc(L->data,sizeof(char) * new_length+1);
 
     L->used=index+1;
     L->data=data;
+    L->data[index]=item;
     L->data[L->used]='\0';
     L->length=new_length;
-    L->data[index]=item;
     return 0;
   }
 
-  else if (index>=L->used && index<L->length) {
-    if (DEBUG) printf("no shift\n");
-    removeNullTerminator(L);
+  if (index>=L->used && index<L->length) {
+    if (DEBUG) printf("no realloc no shift\n");
+    specialRemoveNullTerminator(L);
     L->data[index]=item;
-    ++L->used;
-    if(index>L->used) L->used=index+1;
+    L->used=index+1;
+    L->data[L->used]='\0';
     return 0;
   }
+
+
 
   return 0;
 }
