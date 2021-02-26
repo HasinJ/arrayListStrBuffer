@@ -56,7 +56,7 @@ int al_remove(arraylist_t *L, int *item){
 int al_insert(arraylist_t *L, int index, int item){
   if (DEBUG) printf("item %d index %d \n", item, index);
   size_t new_length,i;
-  if(L->length*2<index) new_length=index+1;
+  if(L->length*2<=index) new_length=index+1;
   else new_length=L->length*2;
 
   if (index>L->length) {
