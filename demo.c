@@ -1,6 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include "arraylist.h"
+#include "strbuf.h"
 
 int cmp(const void *a, const void *b){
     int x = *(int*)a;
@@ -8,6 +8,16 @@ int cmp(const void *a, const void *b){
     if (x < y) return -1;
     if (x == y) return 0;
     return 1;
+}
+
+void test(strbuf_t *L, char* item){
+  L->data[0]=item[0];
+  L->data[1]='\0';
+
+  printf("test: %c\n", item[0]);
+
+  printf("test should be same: %s\n", L->data);
+
 }
 
 int main(int argc, char **argv){
@@ -24,31 +34,28 @@ int main(int argc, char **argv){
     }
 
 
-    char choice[2];
-    int i, item, index;
-    arraylist_t A;
-    al_init(&A, 2);
 
-    while(fscanf(f,"%s %d",choice, &item)!=EOF){
-    	//al_append(&A, d);
-      if(choice[0]=='a') al_append(&A, item);
-      if(choice[0]=='i') {
-        fscanf(f,"%d",&index);
-        al_insert(&A, index, item);
-      }
-      //printf("choice: %s, item: %d\n", choice, item);
+    int i;
+    strbuf_t S;
+    sb_init(&S, 2);
+
+    sb_append(&S, 'c');
+
+
+    //qsort(S.data, S.used, sizeof(int), cmp);
+    printf("\nfinal: \n");
+
+    for (i = 0; i < S.used+1; ++i)  {
+      printf("%d ", S.data[i]);
     }
 
-    //qsort(A.data, A.used, sizeof(int), cmp);
-    printf("final: \n");
-    for (i = 0; i < A.used; ++i) {
-    	printf("%d\n", A.data[i]);
-    }
+    //printf("%s ", &S.data[0]);
+    printf("\nData Printed: %s\n\n", S.data);
 
-    printf("A.used %ld\n", A.used);
-    printf("A.length %ld\n", A.length);
-    //printf("A.data[0] %d\n", A.data[0]);
-    al_destroy(&A);
+    printf("S.used %ld\n", S.used);
+    printf("S.length %ld\n", S.length);
+    //printf("S.data[0] %d\n", S.data[0]);
+    sb_destroy(&S);
 
     return EXIT_SUCCESS;
 }
