@@ -1,19 +1,19 @@
-demo: demo.o arraylist.o
-	gcc -g -std=c99 -Wvla -Wall -fsanitize=address,undefined -o demo demo.o arraylist.o
+demo: demo.o strbuf.o
+	gcc -g -std=c99 -Wvla -Wall -fsanitize=address,undefined -o demo demo.o strbuf.o
 
-demo.o: demo.c arraylist.h
+demo.o: demo.c strbuf.h
 	gcc -c -g -std=c99 -Wvla -Wall -fsanitize=address,undefined demo.c
 
-arraylist.o: arraylist.c arraylist.h
-	gcc -c -g -std=c99 -Wvla -Wall -fsanitize=address,undefined arraylist.c
+strbuf.o: strbuf.c strbuf.h
+	gcc -c -g -std=c99 -Wvla -Wall -fsanitize=address,undefined strbuf.c
 
 
-# separate version of arraylist.o with debugging text enabled
-darraylist.o: arraylist.c arraylist.h
-	gcc -c -g -std=c99 -Wvla -Wall -fsanitize=address,undefined -DDEBUG -o darraylist.o arraylist.c
+# separate version of strbuf.o with debugging text enabled
+dstrbuf.o: strbuf.c strbuf.h
+	gcc -c -g -std=c99 -Wvla -Wall -fsanitize=address,undefined -DDEBUG -o dstrbuf.o strbuf.c
 
-ddemo: demo.o darraylist.o
-	gcc -g -std=c99 -Wvla -Wall -fsanitize=address,undefined -o demo demo.o darraylist.o
+ddemo: demo.o dstrbuf.o
+	gcc -g -std=c99 -Wvla -Wall -fsanitize=address,undefined -o demo demo.o dstrbuf.o
 
 clean:
 	rm -f *.o demo ddemo
