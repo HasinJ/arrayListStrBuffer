@@ -61,7 +61,12 @@ int al_insert(arraylist_t *L, int index, int item){
 
   if (index>L->length) {
     if (DEBUG) printf("no shift but realloc\n");
-    int* data = realloc(L->data, sizeof(int) * new_length);
+    int* data = malloc(sizeof(int) * new_length);
+    if (!data) return 1;
+    for (size_t i = 0; i < L->used; i++) {
+      data[i]=L->data[i];
+    }
+    al_destroy(L);
     L->data=data;
     L->used=new_length;
     L->length=new_length;
@@ -71,6 +76,12 @@ int al_insert(arraylist_t *L, int index, int item){
 
   else if (L->used<L->length && index>=L->used) {
     if (DEBUG) printf("no shift\n");
+    int* data = malloc(sizeof(int) * L->length);
+    for (size_t i = 0; i < L->used; i++) {
+      data[i]=L->data[i];
+    }
+    al_destroy(L);
+    L->data=data;
     L->data[index]=item;
     ++L->used;
     if(index>L->used) L->used=index+1;

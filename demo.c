@@ -36,6 +36,11 @@ int main(int argc, char **argv){
         fscanf(f,"%d",&index);
         al_insert(&A, index, item);
       }
+      if(choice[0]=='r'){
+        printf("item %d index %d \n", item, index);
+        printf("popping\n");
+        al_remove(&A, &item);
+      }
       //printf("choice: %s, item: %d\n", choice, item);
     }
 
