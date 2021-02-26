@@ -35,27 +35,47 @@ int main(int argc, char **argv){
 
     char choice[2];
     char item;
-    int i;
+    int index;
+    size_t i;
     strbuf_t S;
-    sb_init(&S, 3);
+    sb_init(&S, 2);
 
     //sb_append(&S,'c');
 
     while(fscanf(f,"%s %c",choice, &item)!=EOF){
       if(choice[0]=='a') sb_append(&S, item);
       if(choice[0]=='r'){
-        printf("removing\n\n");
+        printf("removing\n");
         sb_remove(&S, &item);
+      }
+      if(choice[0]=='i') {
+        fscanf(f,"%d",&index);
+        sb_insert(&S, index, item);
       }
     }
     //qsort(S.data, S.used, sizeof(int), cmp);
     printf("\nfinal: \n");
 
-    for (i = 0; i < S.length+1; ++i)  {
+    for (i = 0; i < S.used; ++i) {
       printf("%d ", S.data[i]);
       printf("\n");
     }
     printf("\n");
+
+
+    printf("\nhidden stuff: \n");
+
+    for (i = S.used; i<S.length; i++) {
+      printf("%d ", S.data[i]);
+      printf("\n");
+    }
+    printf("last used: %d\n",S.data[S.used-1]);
+
+    for (i = 0; i < S.length+1; ++i) {
+      if (S.data[i]=='\0'){
+        printf("null terminator found at %ld\n",i);
+      }
+    }
 
     //printf("%s ", &S.data[0]);
     printf("\nData Printed: %s\n\n", S.data);
